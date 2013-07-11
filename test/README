@@ -1,0 +1,5 @@
+This directory contains some tests to check your installation of trm.subs
+
+You run the tests using 'python -m unittest discover'
+
+TRM
