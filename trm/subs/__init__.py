@@ -820,6 +820,7 @@ def observatory(telescope=None):
             ['Greenwich', 'London','00 00 0.0','W','51 29 00','N',20.], \
             ['SDSS', 'Apache Point','105 49 13','W','32 46 49','N',2788.], \
             ['SOAR', 'Cerro Pachon','70 44 01.11','W','30 14 16.41','S',2713.], \
+            ['TNT','Doi Inthanon','98 28 00','E','18 34 00','N',2457.], \
 #            ['Greenwich', 'London','00 00 0.0','W','51 28 38','N',20.], \
             ]
 
