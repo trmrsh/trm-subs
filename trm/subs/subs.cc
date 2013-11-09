@@ -8,7 +8,7 @@
 #include <cfloat>
 #include <cstring>
 #include <iostream>
-#include "trm_subs.h"
+#include "trm/subs.h"
 
 // Voigt profile routine
 
