@@ -3,7 +3,9 @@
 import sys
 import re
 
-"""Handles conversion fo RA and Dec in various formats to decimal degrees"
+"""
+Handles conversion fo RA and Dec in various formats to decimal degrees
+"""
 
 # get file name
 if len(sys.argv) == 1:
