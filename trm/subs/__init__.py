@@ -707,13 +707,15 @@ class Fname(str):
         """Checks that the file exists"""
         return os.path.exists(self)
 
-def str2radec(position):
+def str2radec(position, crude=False):
     """
-    (ra,dec,system) = str2radec(position) -- translates an astronomical coordinate string to double precision RA and Dec.
+    ra,dec,system = str2radec(position, crude) -- translates an astronomical
+    coordinate string to double precision RA and Dec.
 
-    'ra' is the RA in decimal hours; 'dec' is the declination in degrees; 'system' is one of
-    'ICRS', 'B1950', 'J2000'. Entering coordinates is an error-prone and often irritating chore.
-    This routine is designed to make it as safe as possible while supporting a couple of common formats.
+    'ra' is the RA in decimal hours; 'dec' is the declination in degrees;
+    'system' is one of 'ICRS', 'B1950', 'J2000'. Entering coordinates is an
+    error-prone and often irritating chore.  This routine is designed to make
+    it as safe as possible while supporting a couple of common formats.
 
     Here are example input formats, both good and bad:
 
@@ -726,6 +728,9 @@ def str2radec(position):
     11 02 12.1 -00 00 02       -- OK. - sign will be picked up
     25 01 61.2 +90 61 78       -- NOK. various items out of range.
     12:32:02.4 -12:11 10.2     -- OK. Colon separators allowed.
+
+    If crude=True low precision coordinates such as "03 50.0 +13 25" will be
+    recognised as well
 
     A SubsError is raised on failure
     """
@@ -747,7 +752,7 @@ def str2radec(position):
         if not system: system = 'ICRS'
         if system != 'ICRS' and system != 'J2000' and system != 'B1950':
             raise SubsError('trm.subs.str2radec: astronomical coordinate system must be one of ICRS, B1950, J2000; ' + system + ' is not recognised.')
-        
+
         ra  = rah + ram/60. + ras/3600.
         dec = decd + decm/60. + decs/3600.
         if decsign == '-': dec = -dec
@@ -769,7 +774,7 @@ def str2radec(position):
         if not system: system = 'ICRS'
         if system != 'ICRS' and system != 'J2000' and system != 'B1950':
             raise SubsError('trm.subs.str2radec: astronomical coordinate system must be one of ICRS, B1950, J2000; ' + system + ' is not recognised.')
-        
+
         ra  = rah + ram/60. + ras/3600.
         dec = decd + decm/60.
         if decsign == '-': dec = -dec
@@ -784,13 +789,54 @@ def str2radec(position):
         dec  = float(dec)
         if ra >= 24. or dec < -90. or dec > 90.:
             raise SubsError('trm.subs.str2radec: one or more of the entries in the astronomical coordinates "' + position + '" is out of range')
-        
+
         if not system: system = 'ICRS'
         if system != 'ICRS' and system != 'J2000' and system != 'B1950':
             raise SubsError('trm.subs.str2radec: astronomical coordinate system must be one of ICRS, B1950, J2000; ' + system + ' is not recognised.')
 
         return (ra,dec,system)
-        
+
+    if crude:
+        # crude coords of form "12 34.5 +12 34"
+        m = re.search(r'^\s*(\d{1,2})(?:\:|\s+)(\d{1,2}(?:\.\d*)?)\s+([\+-])(\d{1,2})(?:\:|\s+)(\d{1,2})(?:\s+(\w+))?\s*$', position)
+        if m:
+            (rah,ram,decsign,decd,decm,system) = m.groups()
+            rah  = int(rah)
+            ram  = float(ram)
+            decd = int(decd)
+            decm = int(decm)
+            if (rah > 23 and ram > 0.) or ram > 60. or (decd > 89 and decm > 0) or decm > 60:
+                raise SubsError('trm.subs.str2radec: one or more of the entries in the astronomical coordinates "' + position + '" is out of range')
+
+            if not system: system = 'ICRS'
+            if system != 'ICRS' and system != 'J2000' and system != 'B1950':
+                raise SubsError('trm.subs.str2radec: astronomical coordinate system must be one of ICRS, B1950, J2000; ' + system + \
+                                    ' is not recognised.')
+
+            ra  = rah + ram/60.
+            dec = decd + decm/60.
+            if decsign == '-': dec = -dec
+            return (ra,dec,system)
+
+        # even cruder: "12 34 +12.4"
+        m = re.search(r'^\s*(\d{1,2})(?:\:|\s+)(\d{1,2})\s+([\+-])(\d{1,2}(?:\.\d*)?)(?:\s+(\w+))?\s*$', position)
+        if m:
+            rah,ram,decsign,decd,system = m.groups()
+            rah  = int(rah)
+            ram  = int(ram)
+            decd = float(decd)
+            if (rah > 23 and ram > 0) or ram > 60 or decd > 90.:
+                raise SubsError('trm.subs.str2radec: one or more of the entries in the astronomical coordinates "' + position + '" is out of range')
+
+            if not system: system = 'ICRS'
+            if system != 'ICRS' and system != 'J2000' and system != 'B1950':
+                raise SubsError('trm.subs.str2radec: astronomical coordinate system must be one of ICRS, B1950, J2000; ' + system + \
+                                    ' is not recognised.')
+
+            ra  = rah + ram/60.
+            dec = decd
+            if decsign == '-': dec = -dec
+            return (ra,dec,system)
 
     raise SubsError('trm.subs.str2radec: could not interpret "' + position + '" as astronomical coordinates')
 
@@ -798,8 +844,8 @@ def observatory(telescope=None):
     """
     (tel,obs,longitude,latitude,height) = observatory(telescope=None)
 
-    telescope = None implies interactive selection of observatory data. The 
-    user will be prompted to choose preloaded observatory data.  
+    telescope = None implies interactive selection of observatory data. The
+    user will be prompted to choose preloaded observatory data.
 
     Returns:
 
@@ -897,7 +943,7 @@ def d2hms(hour, precision=2, sep=':', dp=3, sign=False, nearest=False):
             st = ('%02.2d%s%02.2d%s%0' + str(dp+3) + '.' + str(dp) +'f') % (h,sep,m,sep,s)
         else:
             st = ('%02.2d%s%02.2d%s%02d') % (h,sep,m,sep,s)
-    
+
     if sign:
         if hour < 0:
             st = '-' + st
