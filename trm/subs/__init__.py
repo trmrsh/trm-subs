@@ -1036,7 +1036,8 @@ class Vec3(object):
 
     See also dot and cross.
 
-    NB. This does not have many checks, and you should try to get the code right.
+    NB. This does not have many checks, and you should try to get the
+    code right.
     """
 
     def __init__(self, *args):
@@ -1121,7 +1122,7 @@ class Vec3(object):
             return self.z
         else:
             raise SubsError('Index out of range 0:3')
-        
+
     def sqnorm(self):
         """
         Returns Euclidean length squared of the vector
@@ -1142,6 +1143,20 @@ class Vec3(object):
         if leng == 0.:
             raise SubsError("Vec3.unitv: zero length vector")
         return self / leng
+
+    def dot(self, other):
+        """
+        Returns the scalar or dot product of self with other, a 3-vector
+        """
+        return self.x*other.x+self.y*other.y+self.z*other.z
+
+    def cross(self, other):
+        """
+        Computes the vector or cross product of self with other, a 3-vector
+        """
+        return Vec3(self.y*other.z-self.z*other.y,
+                    self.z*other.x-self.x*other.z,
+                    self.x*other.y-self.y*other.x)
 
 def dot(a, b):
     """
