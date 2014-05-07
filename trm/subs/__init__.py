@@ -571,6 +571,18 @@ class Odict(dict):
             self._keys = dct.keys()
             dict.__init__(self, dct)
 
+    def __repr__(self):
+        rep    = 'Odict({'
+        first = True
+        for k,v in self.iteritems():
+            if first:
+                rep += "'" + k + "': " + repr(v)
+                first = False
+            else:
+                rep += ", '" + k + "': " + repr(v)
+        rep += '})'
+        return rep
+
     def __delitem__(self, key):
         dict.__delitem__(self, key)
         self._keys.remove(key)
@@ -593,7 +605,7 @@ class Odict(dict):
             else:
                 st += ('%s%-' + str(Odict.nlength) + 's ') % (inset,key)
             st += str(val) + '\n'
-            
+
         Odict.ninset -= Odict.nincr
         return st
 
