@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """
 a module of general utility routines
 
@@ -6,75 +7,80 @@ data. See also the sub-packages below.
 
 Functions
 =========
-air2vac            -- convert from air to vacuum wavelengths
-centroid           -- Schneider & Young-style single-gaussian cross-correlation
-convex_hull        -- returns convex hull in 2D
-date2dmy           -- returns (year,month,day) from a date string
-d2hms              -- produce an hh:mm:ss.ss time string from a decimal hour.
-find_exec          -- searches for an executable
-hms2d              -- produce a decimal hour from an hh:mm:ss.ss time string
-inpoly             -- determines whether a point is inside or outside a polygon
-int2month          -- return 3-letter name of a month from an integer 1 to 12
-linterp            -- linear interpolation of an array onto a different sampling
-m2min              -- computes minimum mass of a companion star given m1 and a mass function.
-month2int          -- return an integer 1 to 12 from name of a month
-mr_wd_eggleton     -- radius of white dwarf according to a formula of Eggleton's
-observatory        -- interactive selection of observatory information
-orbital_separation -- orbital separation given masses and period
-orbital_period     -- orbital period given masses and the separation
-planck             -- compute Planck function
-pts2cont           -- converts x,y points into contourable image
-rlobe_eggleton     -- Eggleton's relative Roche lobe radius formula
-sigma_reject       -- computes clipped mean of a numpy array
-sinfit             -- fits a sinusoid plus a constant to some data
-slitloss           -- compute slitloss for gaussian seeing
-splfit             -- fits a spline to a 1D array
-str2radec          -- convert from a string to numerical RA, Dec
-vac2air            -- convert from vacuum to air wavelengths
-voigt              -- voigt function (interface to a C routine)
-zeta_wd_eggleton   -- logarithmic radius vs mass derivative
+
+air2vac            : convert from air to vacuum wavelengths
+centroid           : Schneider & Young-style single-gaussian cross-correlation
+convex_hull        : returns convex hull in 2D
+date2dmy           : returns (year,month,day) from a date string
+d2hms              : produce an hh:mm:ss.ss time string from a decimal hour.
+find_exec          : searches for an executable
+hms2d              : produce a decimal hour from an hh:mm:ss.ss time string
+inpoly             : determines whether a point is inside or outside a polygon
+int2month          : return 3-letter name of a month from an integer 1 to 12
+linterp            : linear interpolation of an array onto a different sampling
+m2min              : computes minimum mass of a companion star given m1 and a mass function.
+ml17_to_3d_dlogg   : Tremblay 3D atmosphere correction routine
+ml17_to_3d_dteff   : Tremblay 3D atmosphere correction routine
+ml18_to_3d_dlogg   : Tremblay 3D atmosphere correction routine
+ml18_to_3d_dteff   : Tremblay 3D atmosphere correction routine
+month2int          : return an integer 1 to 12 from name of a month
+mr_wd_eggleton     : radius of white dwarf according to a formula of Eggleton's
+observatory        : interactive selection of observatory information
+orbital_separation : orbital separation given masses and period
+orbital_period     : orbital period given masses and the separation
+planck             : compute Planck function
+pts2cont           : converts x,y points into contourable image
+rlobe_eggleton     : Eggleton's relative Roche lobe radius formula
+sigma_reject       : computes clipped mean of a numpy array
+sinfit             : fits a sinusoid plus a constant to some data
+slitloss           : compute slitloss for gaussian seeing
+splfit             : fits a spline to a 1D array
+str2radec          : convert from a string to numerical RA, Dec
+vac2air            : convert from vacuum to air wavelengths
+voigt              : voigt function (interface to a C routine)
+zeta_wd_eggleton   : logarithmic radius vs mass derivative
 
 Classes
 =======
-iStr        -- case insensitive string class
-Odict       -- ordered dictionary class     
-Fname       -- handles filenames with standard extensions
-SubsError   -- exception class for the package
-Poly        -- Polynomial class
-Vec3        -- Cartesian 3-vectors
+iStr        : case insensitive string class
+Odict       : ordered dictionary class
+Fname       : handles filenames with standard extensions
+SubsError   : exception class for the package
+Poly        : Polynomial class
+Vec3        : Cartesian 3-vectors
 
 Data
 ====
-ME     -- mass of the electron, SI
-MP     -- mass of the proton, SI
-E      -- charge on the electron, SI
-H      -- Planck's constant SI
-C      -- Speed of light, SI
-K      -- Boltzmann's constant, SI
-SIGMA  -- Stefan-Boltzmann, SI
-RSUN   -- Radius of Sun, SI
-PARSEC -- 1 parsec, SI
-AU     -- 1 AU, SI
-G      -- Gravitational constant, SI
-MSUN   -- Mass of the Sun, SI
-GMSUN  -- Gravitational parameter of the Sun, SI
-KGAUSS -- Gauss' gravitational constant G*MSUN, AU^(3/2) day^-1
-MJ     -- Mass of Jupiter, SI
-DAY    -- Length of a day, SI
-YEAR   -- Length of a year, SI
+ME     : mass of the electron, SI
+MP     : mass of the proton, SI
+E      : charge on the electron, SI
+H      : Planck's constant SI
+C      : Speed of light, SI
+K      : Boltzmann's constant, SI
+SIGMA  : Stefan-Boltzmann, SI
+RSUN   : Radius of Sun, SI
+PARSEC : 1 parsec, SI
+AU     : 1 AU, SI
+G      : Gravitational constant, SI
+MSUN   : Mass of the Sun, SI
+GMSUN  : Gravitational parameter of the Sun, SI
+KGAUSS : Gauss' gravitational constant G*MSUN, AU^(3/2) day^-1
+MJ     : Mass of Jupiter, SI
+DAY    : Length of a day, SI
+YEAR   : Length of a year, SI
 
 Sub-packages
 ============
-cpp    -- some C++ helper routines
-dvect  -- data vectors [data, errors, label]
-input  -- parameter input with default storage 
-smtp   -- provides one function useful for handling smtp-based e-mail
+cpp    : some C++ helper routines
+dvect  : data vectors [data, errors, label]
+input  : parameter input with default storage 
+smtp   : provides one function useful for handling smtp-based e-mail
 
 Withdrawn functions
 ===================
 
-fasper  -- please see the package trm.pgram instead.
-medfilt -- use scipy.signal.medfilt instead
+fasper  : please see the package trm.pgram instead.
+medfilt : use scipy.signal.medfilt instead
 """
 
 import sys, os, exceptions, re, copy
@@ -84,7 +90,7 @@ import numpy as np
 sys.path.append('.')
 from _subs import *
 
-# Constants 
+# Constants
 ME     = 9.1093897e-31     # Mass of the electron, SI
 MP     = 1.672621637e-27   # Mass of the proton, SI
 E      = 1.602176487e-19   # Charge on the electron, SI
@@ -110,9 +116,9 @@ def planck(wave, temp, units='FLAM'):
 
     Arguments:
 
-    wave     -- wave, a number or a numpy array. Units of nm.
-    temp     -- temperature, a number or numpy array. Kelvin
-    units    -- 'FLAM' gives flambda per m, 'FNU' gives fnu per Hz.
+    wave     : wave, a number or a numpy array. Units of nm.
+    temp     : temperature, a number or numpy array. Kelvin
+    units    : 'FLAM' gives flambda per m, 'FNU' gives fnu per Hz.
 
     NB only one of wave or temp can be an array, not both.
     """
@@ -149,8 +155,8 @@ def slitloss(width, seeing):
 
     Arguments:
 
-    width  -- slit width
-    seeing -- FWHM seeing.
+    width  : slit width
+    seeing : FWHM seeing.
 
     """
     import scipy.integrate
@@ -168,12 +174,12 @@ def splfit(x, y, ye, nspline, thresh, slow=True):
     The spline knots are regularly spaced in x and rejection cycles are used
     to kick out points more than rms sigma away from the fit, one at a time.
 
-    x       -- the X values
-    y       -- the Y values
-    ye      -- uncertainties in Y, used to weight fit. Must be > 0.
-    nspline -- the number of splines
-    thresh  -- the rejection threshold
-    slow    -- True for worst-point-at-a-time rejection, False for lots.
+    x       : the X values
+    y       : the Y values
+    ye      : uncertainties in Y, used to weight fit. Must be > 0.
+    nspline : the number of splines
+    thresh  : the rejection threshold
+    slow    : True for worst-point-at-a-time rejection, False for lots.
 
     Returns (sfit,nrej,rms,ok) where sfit = the final fit, nrej = the number of points rejected,
     rms = the RMS of the sigma normalised residuals (i.e. = 1 in ideal case where scatter matches
@@ -208,7 +214,7 @@ def splfit(x, y, ye, nspline, thresh, slow=True):
 
         if slow:
             worst = resid[ok].max()
-            if worst > rms*thresh:                
+            if worst > rms*thresh:
                 ok = ok & (resid != worst)
                 nrej = 1
             else:
@@ -228,14 +234,14 @@ def sinfit(x, y, ye, period, pfree=False, mask=None):
 
     Model y = c + a*sin(2*pi*x/period) + b*cos(2*pi*x/period)
 
-    x       -- the X values. Take care with e.g. JD when there is an enormous
+    x       : the X values. Take care with e.g. JD when there is an enormous
                offset as it can slow the routine down. Worth offsetting to make
                the mean value close to 0.
-    y       -- the Y values
-    ye      -- uncertainties in Y, used to weight fit. Must be > 0.
-    period  -- period, same units as X
-    pfree   -- True/False tow let the period be free or not
-    mask    -- specifies which points to be used for the fit. Fit is
+    y       : the Y values
+    ye      : uncertainties in Y, used to weight fit. Must be > 0.
+    period  : period, same units as X
+    pfree   : True/False tow let the period be free or not
+    mask    : specifies which points to be used for the fit. Fit is
                still evlauted at all points, but the coefficients are
                based only upon the points set to True in this array
 
@@ -312,8 +318,8 @@ def m2min(mf, m1):
     Returns the minimum possible mass(es) of a companion star given a mass function 
     (or a numpy array of them) and a single primary mass. Works by iteration.
 
-    mf -- mass function, i.e. K1**2*(P/2*Pi*G).
-    m1 -- mass of primary
+    mf : mass function, i.e. K1**2*(P/2*Pi*G).
+    m1 : mass of primary
     """
 
     m2 = mf
@@ -324,24 +330,24 @@ def m2min(mf, m1):
     return m2
 
 def linterp(x, y, xnew):
-    
+
     """
     Returns linear interpolation of array y onto a new array xnew
 
     Values off ends are set to the end values.
-    
+
     Arguments:
 
-    x    -- array on which values y are defined
-    y    -- values defined for every x
-    xnew -- new values of x for which y values will be found by linear interpolation
+    x    : array on which values y are defined
+    y    : values defined for every x
+    xnew : new values of x for which y values will be found by linear interpolation
     """
 
     if len(x) != len(y):
         raise Exception('subs.linterp: x and y have different lengths')
     if x.ndim != 1 or y.ndim != 1:
         raise Exception('subs.linterp: x and/or y do not have correct number of dimensions')
-    
+
     # array such that for all j
     # x[iarr[j]-1] < xnew[j] < x[iarr[j]]
 
@@ -351,12 +357,12 @@ def linterp(x, y, xnew):
 
         # linearly interpolate onto same scale as data
         ok   = (iarr > 0) & (iarr < len(x))
-        
+
         x1   = xnew[ok] - x[iarr[ok]-1]
         x2   = x[iarr[ok]] - xnew[ok]
         nvec = np.empty_like(xnew)
         nvec[ok] = (x1*y[iarr[ok]]+x2*y[iarr[ok]-1])/(x1+x2)
-        
+
     # deal with ends
         nvec[iarr == 0]      = y[0]
         nvec[iarr == len(x)] = y[-1]
@@ -373,27 +379,27 @@ def linterp(x, y, xnew):
             return ((xnew - x[iarr[0]-1])*y[iarr[0]]+(x[iarr[0]]-xnew)*y[iarr[0]-1])/(x[iarr[0]]-x[iarr[0]-1])
 
 def centroid(xpos, fwhm, y, emission=True, e=None):
-    """(xcen,{xerr}) = centroid(xpos, fwhm, y, e=None) -- computes weighted centroid of a feature in a 1D array.
+    """(xcen,{xerr}) = centroid(xpos, fwhm, y, e=None) : computes weighted centroid of a feature in a 1D array.
 
     This uses the classic Young & Schneider cross-correlation with a gaussian method. Note that this routine will
     use all of the arrays passed to it. If it runs slowly you may be be able to speed it up by passing sub-sections
     of the arrays.
-    
+
     Arguments:
 
-    xpos     -- initial position, with centre of the first pixel defined as 0.0. This must initially be
+    xpos     : initial position, with centre of the first pixel defined as 0.0. This must initially be
                 within the range 1 to len(y)-2, i.e. more than 1 from either end. The routine fails if it cannot
                 locate an extremum of the cross-correlation only shifts
                 by 3*fwhm from this position at the most.
-    fwhm     -- the full width at half maximum in pixels of the gaussian which must be >=2.
-    emission -- True for emission lines, False for absorption
-    y        -- the array of values containing the feature. e are 1-sigma uncertainties. Must have at least 3 pixels.
-    e        -- 1-sigma uncertainties if available. These are only used to estimate the uncertainty in the answer
+    fwhm     : the full width at half maximum in pixels of the gaussian which must be >=2.
+    emission : True for emission lines, False for absorption
+    y        : the array of values containing the feature. e are 1-sigma uncertainties. Must have at least 3 pixels.
+    e        : 1-sigma uncertainties if available. These are only used to estimate the uncertainty in the answer
 
     Returns:
 
-    xcen     -- centroid 
-    xerr     -- 1-sigma uncertainty in centroid if e is not None
+    xcen     : centroid 
+    xerr     : 1-sigma uncertainty in centroid if e is not None
 
     Raises SubsError exceptions if there are problems. 
     """
@@ -410,8 +416,8 @@ def centroid(xpos, fwhm, y, emission=True, e=None):
     def dcorr(xd, y):
         """Returns derivative of correlation with gaussian
 
-        xd -- xd offsets from centre of gaussian, scaled by RMS
-        y  -- the corresponding y values
+        xd : xd offsets from centre of gaussian, scaled by RMS
+        y  : the corresponding y values
         """
         return np.sum(y*xd*np.exp(-np.power(xd,2)/2))
 
@@ -422,9 +428,9 @@ def centroid(xpos, fwhm, y, emission=True, e=None):
         raise SubsError('centroid: xpos = ' + str(xpos) + ' is out of allowed range 1 to ' + str(len(y)-2))
     if len(y) < 3:
         raise SubsError('median: length of y array < 3')
-    if e != None and len(e) != len(y):
+    if e is not None and len(e) != len(y):
         raise SubsError('median: length of e array does not match the y array')
-    
+
     sigma = fwhm/2.3548
     x     = np.arange(len(y),dtype=float)
     xd    = (x - xpos)/sigma
@@ -462,7 +468,7 @@ def centroid(xpos, fwhm, y, emission=True, e=None):
             found_switch = True
             break
         shift += cshift
-        
+
     if not found_switch:
         raise SubsError('centroid: could not find peak within 3*fwhm of initial position')
 
@@ -473,7 +479,7 @@ def centroid(xpos, fwhm, y, emission=True, e=None):
 
     if x1 < 0.0 or x2 < 1.0 or x1 > len(y)-2 or x2 > len(y)-1:
         raise SubsError('centroid: bracketting limits = ' + str(x1) + ', ' + str(x2) + ' out of range.')
-    
+
     # now find root using Brent's method
 
     def bfunc(xpos, x, y, sigma):
@@ -484,7 +490,7 @@ def centroid(xpos, fwhm, y, emission=True, e=None):
     if not r.converged:
         raise SubsError('centroid: brentq did not converge')
 
-    if e != None:
+    if e is not None:
         xd = (x - xm)/sigma
         return (xm, comperr(xd, y, e, sigma))
     else:
@@ -538,7 +544,7 @@ class iStr(str):
 
     def find(self, other, *args):
         return str.find(self.__lowerCaseMe, other.lower(), *args)
-    
+
     def index(self, other, *args):
         return str.index(self.__lowerCaseMe, other.lower(), *args)
 
@@ -685,12 +691,12 @@ class Fname(str):
 
     def __new__(self, root, ext, ftype=OLD, check=EXIST, template=True):
         """
-        root     -- root name of file (if it ends with 'ext', an extra 'ext' will not be added)
-        ext      -- extension, e.g. '.dat'
-        ftype    -- OLD = old file, NEW = new file which will overwrite anything existing, 
+        root     : root name of file (if it ends with 'ext', an extra 'ext' will not be added)
+        ext      : extension, e.g. '.dat'
+        ftype    : OLD = old file, NEW = new file which will overwrite anything existing, 
                     NOCLOBBER = new file but there must not be an existing one of the specified name
-        check    -- EXIST implies it will check for the existence of a file. NOTEXIST won't.
-        template -- if True then no checks will be carried out; the object is to act as a template for
+        check    : EXIST implies it will check for the existence of a file. NOTEXIST won't.
+        template : if True then no checks will be carried out; the object is to act as a template for
                     for others where ftype and check will be applied. True is the default since usually
                     this object is used to define a template
         """
@@ -731,15 +737,15 @@ def str2radec(position, crude=False):
 
     Here are example input formats, both good and bad:
 
-    12 34 56.1 -23 12 12.1     -- OK. 'system' will default to ICRS
-    234.5 34.2  B1950          -- OK. RA, Dec entered in decimal degrees, B1950 to override default ICRS
-    11 02 12.1 -23.2 J2000     -- NOK. Cannot mix HMS/DMS with decimals
-    11 02 12.1 -23 01 12 J4000 -- NOK. Only 'ICRS', 'B1950', 'J2000' allowed at end.
-    1.02323e2 -32.5            -- NOK. Scientific notation not supported.
-    11 02 12.1 23 01 12        -- NOK. In HMS mode, the sign of the declination must be supplied
-    11 02 12.1 -00 00 02       -- OK. - sign will be picked up
-    25 01 61.2 +90 61 78       -- NOK. various items out of range.
-    12:32:02.4 -12:11 10.2     -- OK. Colon separators allowed.
+    12 34 56.1 -23 12 12.1     : OK. 'system' will default to ICRS
+    234.5 34.2  B1950          : OK. RA, Dec entered in decimal degrees, B1950 to override default ICRS
+    11 02 12.1 -23.2 J2000     : NOK. Cannot mix HMS/DMS with decimals
+    11 02 12.1 -23 01 12 J4000 : NOK. Only 'ICRS', 'B1950', 'J2000' allowed at end.
+    1.02323e2 -32.5            : NOK. Scientific notation not supported.
+    11 02 12.1 23 01 12        : NOK. In HMS mode, the sign of the declination must be supplied
+    11 02 12.1 -00 00 02       : OK. - sign will be picked up
+    25 01 61.2 +90 61 78       : NOK. various items out of range.
+    12:32:02.4 -12:11 10.2     : OK. Colon separators allowed.
 
     If crude=True low precision coordinates such as "03 50.0 +13 25" will be
     recognised as well
@@ -861,11 +867,11 @@ def observatory(telescope=None):
 
     Returns:
 
-    tel        -- telescope name (which can be used to force selection in future)
-    obs        -- observatory
-    longitude  -- East-positive longitude in degrees
-    latitude   -- latitude in degrees
-    height     -- height above sea-level, metres
+    tel        : telescope name (which can be used to force selection in future)
+    obs        : observatory
+    longitude  : East-positive longitude in degrees
+    latitude   : latitude in degrees
+    height     : height above sea-level, metres
     """
     
     OBS = [ \
@@ -928,12 +934,12 @@ def observatory(telescope=None):
 def d2hms(hour, precision=2, sep=':', dp=3, sign=False, nearest=False):
     """hms = d2hms(hour, precision=2) -- returns HH MM SS.SS time string from a decimal hour
 
-    hour      -- decimal hour
-    precision -- 0 gives hh:mm, 1 gives hh:mm:ss, 2 gives hh:mm:ss.sss
-    sep       -- separator
-    dp        -- number of decimal places in the case of precision = 2
-    sign      -- True if you want to make sure a '+' is appended at the start
-    nearest   -- If you want only limited precision this controls whether one
+    hour      : decimal hour
+    precision : 0 gives hh:mm, 1 gives hh:mm:ss, 2 gives hh:mm:ss.sss
+    sep       : separator
+    dp        : number of decimal places in the case of precision = 2
+    sign      : True if you want to make sure a '+' is appended at the start
+    nearest   : If you want only limited precision this controls whether one
                  truncates or takes the closest value
     """
     if nearest:
@@ -967,7 +973,7 @@ def hms2d(utc):
     """hour = hms2d(utc) -- returns decimal hour from and HH MM SS.SS time string. Can also cope
     with initial + or - sign.
 
-    utc    -- time in HH MM SS.SSS format. HH MM and SS must be separated by exactly 1 character.
+    utc    : time in HH MM SS.SSS format. HH MM and SS must be separated by exactly 1 character.
     """
     if utc[:1] == '-':
         sign = -1.
@@ -988,7 +994,7 @@ class SubsError(exceptions.Exception):
     """For throwing exceptions from the subs module"""
     def __init__(self, value):
         self.value = value
-            
+
     def __str__(self):
         return repr(self.value)
 
@@ -1007,10 +1013,10 @@ class Poly(np.ndarray):
 
         # Make sure we are working with an array, and copy the data if requested
         subarr = np.array((n), np.float)
-    
+
         # Transform 'subarr' from an ndarray to our new subclass.
         subarr = subarr.view(subtype)
-   
+
         subarr.x0     = x0
         subarr.xscale = xscale
         return subarr
@@ -1021,7 +1027,7 @@ class Poly(np.ndarray):
            # We could have checked first whether self.info was already defined:
            #if not hasattr(self, 'info'):
            #    self.info = getattr(obj, 'info', {})
-  
+
     def __repr__(self):
         desc="""
 array(data=
@@ -1267,7 +1273,7 @@ def month2int(name):
     """
     i = month2int(name) -- returns integer 1 to 12 given first three characters of a month name, case insensitively
 
-    returns 0 if 
+    returns 0 if
     """
 
     names = {'jan' : 1, 'feb' : 2, 'mar' : 3, 'apr' : 4, 'may' : 5, 'jun' : 6, 'jul' : 7, 'aug' : 8, 'sep' : 9, 'oct' : 10, 'nov' : 11, 'dec' : 12}
@@ -1287,13 +1293,13 @@ def int2month(month):
 
 def inpoly(poly, x, y):
     """
-    Determines whether a point (x,y) is inside a polygon defined by the numpy 
+    Determines whether a point (x,y) is inside a polygon defined by the numpy
     2D arrays poly which lists the vertices of the polygon such that poly[0,0]
-    is the first x coordinate, poly[0,1] is the first y coordinate, poly[1,0] 
+    is the first x coordinate, poly[0,1] is the first y coordinate, poly[1,0]
     is the second x coordinate etc. It returns True if the point is inside the poly.
 
-    See this web page for lengthy description of the method which I 
-    translated from the short piece of C-code listed there:
+    See this web page for lengthy description of the method which I
+    translated from the short piece of C-code listed here:
 
     http://www.ecse.rpi.edu/Homepages/wrf/Research/Short_Notes/pnpoly.html
 
@@ -1313,21 +1319,21 @@ def inpoly(poly, x, y):
 def sigma_reject(data, thresh, onebyone):
     """
     This routine computes the raw mean and RMS and the mean and RMS after
-    rejection of points more than thresh*RMS from the mean. The rejection 
+    rejection of points more than thresh*RMS from the mean. The rejection
     can be carried out one bad pixel value at a time (onebyone=True) or all bad pixels
-    at a time. The first method (which can involve mutiple pixels of the sam evalue) 
+    at a time. The first method (which can involve mutiple pixels of the same value)
     is slow but robust whereas the second is fast but potentially dangerous.
 
     Arguments:
 
-    data     -- a numpy array
-    thresh   -- threshold number of RMS e.g. 3.
-    onebyone -- True for slow single worst pixel reject methos, False for fast, 
+    data     : a numpy array
+    thresh   : threshold number of RMS e.g. 3.
+    onebyone : True for slow single worst pixel reject methos, False for fast,
                 all bad pixels reject method.
 
     Returns (rawmean,rawrms,clipmean,cliprms,nreject,ncycles)
     """
-    
+
     if not isinstance(data, np.ndarray):
         raise SubsError("sigma_reject: first input is not a numpy.ndarray")
 
@@ -1339,7 +1345,7 @@ def sigma_reject(data, thresh, onebyone):
     while nrej:
         mean = data[mask].mean()
         rms  = data[mask].std()
-    
+
         if ncycles == 0:
             rawmean = mean
             rawrms  = rms
@@ -1348,14 +1354,14 @@ def sigma_reject(data, thresh, onebyone):
         diff = np.abs(data - mean)
         if onebyone:
             if diff[mask].max() > thresh*rms:
-                mask = mask & (diff < diff[mask].max()) 
+                mask = mask & (diff < diff[mask].max())
         else:
             mask = mask & (diff <= thresh*rms)
 
         # Check on number of rejects
         nrnew = np.size(data) - np.size(data[mask])
         nrej  = nrnew - nrold
-        nrold = nrnew 
+        nrold = nrnew
         ncycles += 1
 
     return (rawmean,rawrms,mean,rms,nrnew,ncycles)
@@ -1364,7 +1370,7 @@ def sigma_reject(data, thresh, onebyone):
 def find_exec(executable, path=None):
     """Try to find 'executable' in the directories listed in 'path' (a
     string listing directories separated by 'os.pathsep'; defaults to
-    os.environ['PATH']).  Returns the complete filename or raises a 
+    os.environ['PATH']).  Returns the complete filename or raises a
     SubsError if not found.
     """
     if path is None:
@@ -1399,17 +1405,17 @@ def zeta_wd_eggleton(mass):
 def pts2cont(x, y, x1, x2, nx, y1, y2, ny, xb=0., yb=0., frac=None):
     """
     Converts a series of points into a binned image and optionally
-    blurring them. Can also compute contour levels marking particular 
+    blurring them. Can also compute contour levels marking particular
     fractions of points, e.g. 0.68, 0.95
-    
+
     Arguments:
 
-    x, y       -- arrays / lists of x and y values of points
-    x1, x2, nx -- range and number of pixels for the X axis. 
+    x, y       : arrays / lists of x and y values of points
+    x1, x2, nx : range and number of pixels for the X axis.
                   Leftmost pixel starts at x1, rightmost ends at x2.
-    y1, y2, ny -- range and number of pixels for the Y axis
-    xb, yb     -- amount of blurring in X and Y (RMS in pixels).
-    frac       -- Array / list of fractions to determine equivalent contour levels.
+    y1, y2, ny : range and number of pixels for the Y axis
+    xb, yb     : amount of blurring in X and Y (RMS in pixels).
+    frac       : Array / list of fractions to determine equivalent contour levels.
 
     Returns: (shist, cont) where shist is a smoothed histogrammed version of
     the points and comt is an array of contour levels corresponding to frac.
@@ -1509,12 +1515,12 @@ def scargle(x, y, e, f1, f2, nf):
     it directly. You should be considering the Press-Rybicki alternative if
     you have lots of points and are not miles away from regular spacing.
 
-    x   -- input X values
-    y   -- input Y values
-    e   -- input Y uncertainies (only those > 0 will be used)
-    f1  -- initial frequency, cycles per unit x
-    f2  -- initial frequency, cycles per unit x
-    nf  -- number of frequencies (>1)
+    x   : input X values
+    y   : input Y values
+    e   : input Y uncertainies (only those > 0 will be used)
+    f1  : initial frequency, cycles per unit x
+    f2  : initial frequency, cycles per unit x
+    nf  : number of frequencies (>1)
 
     Returns (f,p) arrays of frequencies and powers
 
@@ -1622,3 +1628,128 @@ def expint2(x):
         e1[x > 1.] = ex[ok]*(A[9]+s*(A[8]+s*(A[7]+s*(A[6]+s))))/(s*(A[13]+s*(A[12]+s*(A[11]+s*(A[10]+s))))) 
 
     return ex-x*e1
+
+def ml18_to_3d_dteff(teff,logg):
+    """
+    Computes Tremblay et al 2013A&A...559A.104T 3D corrections
+    to WD logg / Teff values for mixing length ML2/alpha = 0.8.
+
+    Arguments::
+
+      teff : effective temperature (K)
+      logg : log10 surface gravity in cgs units
+
+    Returns: correction to teff (in K)
+
+    The arguments can be single floats or equal sized arrays.
+    """
+
+    a1 = +1.0947335e-03
+    a2 = -1.8716231e-01
+    a3 = +1.9350009e-02
+    a4 = +6.4821613e-01
+    a5 = -2.2863187e-01
+    a6 = +5.8699232e-01
+    a7 = -1.0729871e-01
+    a8 = +1.1009070e-01
+
+    teff0=(teff-10000.0)/1000.00
+    logg0=(logg-8.00000)/1.00000
+    shift=a1+(a2+a7*teff0+a8*logg0)*np.exp(-(a3+a5*teff0+a6*logg0)**2*((teff0-a4)**2))
+    return shift*1000.00+0.00000
+
+def ml18_to_3d_dlogg(teff,logg):
+    """
+    Computes Tremblay et al 2013A&A...559A.104T 3D corrections
+    to WD logg / Teff values for mixing length ML2/alpha = 0.8.
+
+    Arguments::
+
+      teff : effective temperature (K)
+      logg : log10 surface gravity in cgs units
+
+    Returns: correction to logg
+
+    The arguments can be single floats or equal sized arrays.
+
+    From Tremblay et al 2013A&A...559A.104T
+    """
+    a1  = +7.5209868e-04
+    a2  = -9.2086619e-01
+    a3  = +3.1253746e-01
+    a4  = -1.0348176e+01
+    a5  = +6.5854716e-01
+    a6  = +4.2849862e-01
+    a7  = -8.8982873e-02
+    a8  = +1.0199718e+01
+    a9  = +4.9277883e-02
+    a10 = -8.6543477e-01
+    a11 = +3.6232756e-03
+    a12 = -5.8729354e-02
+    teff0=(teff-10000.0)/1000.00
+    logg0=(logg-8.00000)/1.00000
+    return (a1+a5*np.exp(-a6*((teff0-a7)**2)))+a2*np.exp(
+        -a3*((teff0-(a4+a8*np.exp(-(a9+a11*teff0+a12*logg0)**2*((teff0-a10)**2))))**2))
+
+
+def ml17_to_3d_dteff(teff,logg):
+    """
+    Computes Tremblay et al 2013A&A...559A.104T 3D corrections
+    to WD logg / Teff values for mixing length ML2/alpha = 0.7.
+
+    Arguments::
+
+      teff : effective temperature (K)
+      logg : log10 surface gravity in cgs units
+
+    Returns: correction to teff (in K)
+
+    The arguments can be single floats or equal sized arrays.
+    """
+
+    a1 = -1.0461690e-03
+    a2 = -2.6846737e-01
+    a3 = +3.0654611e-01
+    a4 = +1.8025848e+00
+    a5 = +1.5006909e-01
+    a6 = +1.0125295e-01
+    a7 = -5.2933335e-02
+    a8 = -1.3414353e-01
+    teff0=(teff-10000.0)/1000.00
+    logg0=(logg-8.00000)/1.00000
+    shift=a1+(a2+a5*teff0+(a6+a7*teff0+a8*logg0)*logg0)*np.exp(-a3*(teff0-a4)**2)
+    return shift*1000.00+0.00000
+
+
+def ml17_to_3d_dlogg(teff,logg):
+    """
+    Computes Tremblay et al 2013A&A...559A.104T 3D corrections
+    to WD logg / Teff values for mixing length ML2/alpha = 0.7.
+
+    Arguments::
+
+      teff : effective temperature (K)
+      logg : log10 surface gravity in cgs units
+
+    Returns: correction to logg
+
+    The arguments can be single floats or equal sized arrays.
+
+    From Tremblay et al 2013A&A...559A.104T
+    """
+
+    a1  = +1.1922481e-03
+    a2  = -2.7230889e-01
+    a3  = -6.7437328e-02
+    a4  = -8.7753624e-01
+    a5  = +1.4936511e-01
+    a6  = -1.9749393e-01
+    a7  = +4.1687626e-01
+    a8  = +3.8195432e-01
+    a9  = -1.4141054e-01
+    a10 = -2.9439950e-02
+    a11 = +1.1908339e-01
+    teff0=(teff-10000.0)/1000.00
+    logg0=(logg-8.00000)/1.00000
+    return a1+a2*np.exp(-(a3+(
+                a5+a7*np.exp(-a8*((teff0-a9)**2)))*teff0+(a6+a10*teff0+a11*logg0)*logg0)**2*((teff0-a4)**2))
