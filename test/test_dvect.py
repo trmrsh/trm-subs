@@ -14,7 +14,7 @@ class TestDvect(unittest.TestCase):
         dy = dvect.Dvect(y, err=e, mask=mx, name='Y')
 
         dvect.errorbar(plt, dx, dy)
-        print "The plot should show a parabola from 0 to 10. Click the exit if OK"
+        print ("The plot should show a parabola from 0 to 10. Click the exit if OK")
         plt.show()
 
 

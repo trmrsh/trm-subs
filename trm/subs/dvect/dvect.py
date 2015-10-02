@@ -50,11 +50,10 @@ spot this automatically. In such cases you will have to cook up a bespoke
 routine to get the right errors.
 """
 
-from __future__ import with_statement
+from __future__ import with_statement, print_function 
 
 __author__ = "Tom Marsh"
 
-import exceptions
 import numpy as np
 from numpy import array, ndarray
 from numpy.ma import MaskedArray, masked_array, nomask, mask_or, getdata, masked, getmaskarray
@@ -249,7 +248,7 @@ class Dvect(MaskedArray):
 
         MaskedArray.__setitem__(self, indx, value)
         if isinstance(value, Dvect) and self._err is not noerr and value._err is not noerr:
-            print len(indx), len(self._err), len(value._err)
+            print (len(indx), len(self._err), len(value._err))
             self._err[indx] = value._err
 
     def __repr__(self):
@@ -366,7 +365,7 @@ class Dvect(MaskedArray):
     __eq__        = _binarywrap('__eq__')
 
 # Exception class
-class DvectError(exceptions.Exception):
+class DvectError(Exception):
     """Class for dvect related errors"""
     pass
 
