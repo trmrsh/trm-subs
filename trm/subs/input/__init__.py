@@ -61,11 +61,12 @@ speed commands a tiny bit.
 When you get prompting, <tab> allows you to complete filenames. Entering '?' gives
 the parameter range if any has been supplied.
 """
+from __future__ import print_function
+
 import os
 import re
 import sys
 import pickle
-import exceptions
 import trm.subs as subs
 
 # next two lines allow tab completion of file names
@@ -198,7 +199,7 @@ class Input(object):
 
         self._cname =  os.path.split(argv.pop(0))[1]
         if self._list:
-            print '\n' + self._cname
+            print ('\n' + self._cname)
 
         if not self._nodefs:
 
@@ -219,7 +220,7 @@ class Input(object):
                 flocal.close()
             except IOError:
                 self._lpars = {}
-            except EOFError, UnpicklingError:
+            except (EOFError, UnpicklingError):
                 sys.stderr.write('Failed to read local defaults file ' + self._lname + '; possible corrupted file.\n')
                 self._lpars = {}
 
@@ -230,7 +231,7 @@ class Input(object):
                 fglobal.close()
             except IOError:
                 self._gpars = {}
-            except EOFError, UnpicklingError:
+            except (EOFError, UnpicklingError):
                 sys.stderr.write('Failed to read global defaults file ' + self._gname + '; possible corrupted file.\n')
                 self._gpars = {}
 
@@ -271,7 +272,7 @@ class Input(object):
             # make the default directory if need be
             if not os.path.lexists(self._ddir):
                 try:
-                    os.mkdir(self._ddir, 0755)
+                    os.mkdir(self._ddir, 0o755)
                 except OSError:
                     sys.stderr.write('Failed to create defaults directory ' + self._ddir + '\n')
 
@@ -405,25 +406,25 @@ class Input(object):
                     if reply == '\\':
                         self._usedef = True
                     elif reply == '?':
-                        print
+                        print ()
                         if minval != None and maxval != None:
-                            print 'Parameter = "' + param + '" must lie from ' + str(minval) + ' to ' + str(maxval)
+                            print ('Parameter = "' + param + '" must lie from ' + str(minval) + ' to ' + str(maxval))
                         elif minval != None:
-                            print 'Parameter = "' + param + '" must be greater than ' + str(minval)
+                            print ('Parameter = "' + param + '" must be greater than ' + str(minval))
                         elif maxval != None:
-                            print 'Parameter = "' + param + '" must be less than ' + str(minval)
+                            print ('Parameter = "' + param + '" must be less than ' + str(minval))
                         else:
-                            print 'Parameter = "' + param + '" has no restrictions on its value.'
-                        print '"' + param + '" has data type =', type(defval)
+                            print ('Parameter = "' + param + '" has no restrictions on its value.')
+                        print ('"' + param + '" has data type =', type(defval))
                         if lvals != None:
-                            print 'Only the following values are allowed:'
-                            print lvals
+                            print ('Only the following values are allowed:')
+                            print (lvals)
                         if isinstance(defval, (list, tuple)) and fixlen:
-                            print 'You must enter exactly',len(defval),'values.'
-                        print
+                            print ('You must enter exactly',len(defval),'values.')
+                        print()
                     elif reply != '':
                         if  isinstance(defval, (list, tuple)) and fixlen and len(reply.split()) != len(defval):
-                            print 'You must enter exactly',len(defval),'values. [You entered only',len(reply.split()),']'
+                            print ('You must enter exactly',len(defval),'values. [You entered only',len(reply.split()),']')
                             reply = '?'
                         else:
                             value = reply
@@ -461,9 +462,9 @@ class Input(object):
                     value = tuple(value)
             else:
                 raise InputError('did not recognize the data type of the default supplied for parameter = ' + param + ' = ' + type(defval))
-        except subs.SubsError, err:
+        except subs.SubsError as err:
             raise InputError(str(err))
-        except ValueError, err:
+        except ValueError as err:
             raise InputError(str(err))
 
         # ensure value is within range
@@ -486,7 +487,7 @@ class Input(object):
             self._lpars[param] = value
 
         if self._list:
-            print param,'=',value
+            print (param,'=',value)
 
         return value
 
@@ -500,7 +501,7 @@ class Input(object):
         else:
             return None
             
-class InputError(exceptions.Exception):
+class InputError(Exception):
     """For throwing exceptions from the input module"""
 
     def __init__(self, value):

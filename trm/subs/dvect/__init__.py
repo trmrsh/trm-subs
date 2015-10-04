@@ -5,8 +5,8 @@
 
 __author__ = "Tom Marsh"
 
-import dvect
-from dvect import *
+#import .dvect
+from .dvect import *
 
 __all__ = ['dvect']
 __all__.extend(dvect.__all__)
