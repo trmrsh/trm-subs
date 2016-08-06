@@ -324,12 +324,12 @@ def m2min(mf, m1):
     return m2
 
 def linterp(x, y, xnew):
-    
+
     """
     Returns linear interpolation of array y onto a new array xnew
 
     Values off ends are set to the end values.
-    
+
     Arguments:
 
     x    -- array on which values y are defined
@@ -341,7 +341,7 @@ def linterp(x, y, xnew):
         raise Exception('subs.linterp: x and y have different lengths')
     if x.ndim != 1 or y.ndim != 1:
         raise Exception('subs.linterp: x and/or y do not have correct number of dimensions')
-    
+
     # array such that for all j
     # x[iarr[j]-1] < xnew[j] < x[iarr[j]]
 
@@ -351,12 +351,12 @@ def linterp(x, y, xnew):
 
         # linearly interpolate onto same scale as data
         ok   = (iarr > 0) & (iarr < len(x))
-        
+
         x1   = xnew[ok] - x[iarr[ok]-1]
         x2   = x[iarr[ok]] - xnew[ok]
         nvec = np.empty_like(xnew)
         nvec[ok] = (x1*y[iarr[ok]]+x2*y[iarr[ok]-1])/(x1+x2)
-        
+
     # deal with ends
         nvec[iarr == 0]      = y[0]
         nvec[iarr == len(x)] = y[-1]
@@ -378,7 +378,7 @@ def centroid(xpos, fwhm, y, emission=True, e=None):
     This uses the classic Young & Schneider cross-correlation with a gaussian method. Note that this routine will
     use all of the arrays passed to it. If it runs slowly you may be be able to speed it up by passing sub-sections
     of the arrays.
-    
+
     Arguments:
 
     xpos     -- initial position, with centre of the first pixel defined as 0.0. This must initially be
@@ -392,12 +392,12 @@ def centroid(xpos, fwhm, y, emission=True, e=None):
 
     Returns:
 
-    xcen     -- centroid 
+    xcen     -- centroid
     xerr     -- 1-sigma uncertainty in centroid if e is not None
 
-    Raises SubsError exceptions if there are problems. 
+    Raises SubsError exceptions if there are problems.
     """
-    
+
     from scipy.optimize import brentq
 
     def comperr(xd, y, e, sigma):
@@ -422,22 +422,22 @@ def centroid(xpos, fwhm, y, emission=True, e=None):
         raise SubsError('centroid: xpos = ' + str(xpos) + ' is out of allowed range 1 to ' + str(len(y)-2))
     if len(y) < 3:
         raise SubsError('median: length of y array < 3')
-    if e != None and len(e) != len(y):
+    if e is not None and len(e) != len(y):
         raise SubsError('median: length of e array does not match the y array')
-    
+
     sigma = fwhm/2.3548
     x     = np.arange(len(y),dtype=float)
     xd    = (x - xpos)/sigma
     dc1   = dcorr(xd, y)
     if dc1 == 0:
-        if e != None:
+        if e is not None:
             return (xpos,comperr(xd, y, e, sigma))
         return xpos
 
     # Try to bracket the peak by looking for closest switch in sign
-    # of the derivative of the x-corr. 
+    # of the derivative of the x-corr.
 
-    x1  = xpos    
+    x1  = xpos
     x2  = xpos
     dc2 = dc1
     found_switch = False
@@ -462,7 +462,7 @@ def centroid(xpos, fwhm, y, emission=True, e=None):
             found_switch = True
             break
         shift += cshift
-        
+
     if not found_switch:
         raise SubsError('centroid: could not find peak within 3*fwhm of initial position')
 
@@ -473,7 +473,7 @@ def centroid(xpos, fwhm, y, emission=True, e=None):
 
     if x1 < 0.0 or x2 < 1.0 or x1 > len(y)-2 or x2 > len(y)-1:
         raise SubsError('centroid: bracketting limits = ' + str(x1) + ', ' + str(x2) + ' out of range.')
-    
+
     # now find root using Brent's method
 
     def bfunc(xpos, x, y, sigma):
@@ -484,7 +484,7 @@ def centroid(xpos, fwhm, y, emission=True, e=None):
     if not r.converged:
         raise SubsError('centroid: brentq did not converge')
 
-    if e != None:
+    if e is not None:
         xd = (x - xm)/sigma
         return (xm, comperr(xd, y, e, sigma))
     else:
@@ -867,7 +867,8 @@ def observatory(telescope=None):
             ['SDSS', 'Apache Point','105 49 13','W','32 46 49','N',2788.], \
             ['SOAR', 'Cerro Pachon','70 44 01.11','W','30 14 16.41','S',2713.], \
             ['TNT','Doi Inthanon','98 28 00','E','18 34 00','N',2457.], \
-#            ['Greenwich', 'London','00 00 0.0','W','51 28 38','N',20.], \
+            ['ATCA','Narrabri','149 32 56.327','E','30 18 52.048', 'S', 209.3], \
+            ['200-in','Palomar','116 51 54','W','33 21 23', 'N', 1713.], \
             ]
 
     if telescope is not None:
