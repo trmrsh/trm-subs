@@ -184,6 +184,9 @@ class Input:
 
         """
 
+        # Flag to indicate whether inputs need to be saved
+        self._save = False
+
         # Extract special keywords NODEFS, PROMPT and LIST from argument list
 
         # Store the command name
@@ -269,54 +272,6 @@ class Input:
         self.narg = 0
         self._usedef = False
 
-    def __del__(self):
-        """Destructor: saves parameter values to disk (if NODEFS has not been
-        specified).
-
-        If you want to save parameters early (e.g. before the user hits
-        ctrl-C) then deleting the Input with 'del' should do it. If errors
-        are encountered, the routine will print to stderr, but not raise
-        exceptions.
-
-        """
-
-        if not self._nodefs:
-
-            # make the default directory if need be
-            try:
-                if not os.path.lexists(self._ddir):
-                    os.mkdir(self._ddir, 0o755)
-            except OSError:
-                warnings.warn(
-                    'input.Input.__del__: failed to create defaults directory {0:s}\n'.format(self._ddir), UserWarning)
-            except AttributeError:
-                warnings.warn(
-                    'input.Input.__del__: defaults directory attribute undefined; possible programming error\n', UserWarning)
-
-            # save local defaults
-            try:
-                with open(self._lname, 'wb') as flocal:
-                    pickle.dump(self._lpars, flocal)
-            except (IOError, TypeError):
-                warnings.warn(
-                    'input.Input.__del__: failed to save local parameter/value pairs to {0:s}\n'.format(self._lname), UserWarning)
-
-            except AttributeError:
-                warnings.warn(
-                    'input.Input.__del__: local parameter file attribute undefined; possible programming error\n', UserWarning)
-
-            # save global defaults
-            try:
-                with open(self._gname, 'wb') as fglobal:
-                    pickle.dump(self._gpars, fglobal)
-            except (IOError, TypeError):
-                    warnings.warn(
-                        'input.Input.__del__: failed to save global parameter/value pairs to {0:s}\n'.format(self._gname),UserWarning)
-
-            except AttributeError:
-                    warnings.warn(
-                        'input.Input.__del__: global parameter file attribute undefined; possible programming error\n', UserWarning)
-
     def prompt_state(self):
         """Says whether prompting is being forced or not. Note the propting state does
         not change once an Input is initialized, being fixed by the presence
@@ -371,9 +326,9 @@ class Input:
         self._rpars[param] = {'g_or_l' : g_or_l, 'p_or_h' : p_or_h}
 
     def set_default(self, param, defval):
-        """
-        Set the default value of a parameter automatically. This is often useful for changing hidden
-        parameters on the fly.
+        """Set the default value of a parameter automatically. This is often useful
+        for changing hidden parameters on the fly.
+
         """
         if param not in self._rpars:
             raise InputError('set_default: parameter = "' + param + '" has not been registered.')
@@ -422,15 +377,18 @@ class Input:
              (integers only)
 
         Data types: at the moment, only certain data types are recognised by
-        this routine. These are the standard numerical types, 'int', 'long',
-        'float', the logical type 'bool' which can be set with any of (case
+        this routine. These are the standard numerical types, 'int', 'float',
+        the logical type 'bool' which can be set with any of (case
         insensitively) 'true', 'yes', 'y', '1' (all True), or 'false', 'no',
-        'n', '0' (all False), strings, and Fname objects to
-        represent filenames with specific extensions, and lists. In the case
-        of tuples, it is the default value 'defval' which sets the type.
+        'n', '0' (all False), strings, and Fname objects to represent
+        filenames with specific extensions, and lists. In the case of tuples,
+        it is the default value 'defval' which sets the type.
 
         """
 
+        # calling this routine indicates that we need to save the inputs at
+        # some point
+        self._save = True
         if param not in self._rpars:
             raise InputError(
                 'input.Input.get_value: parameter = "{:s}" has not been registered.'.format(param.upper())
@@ -567,7 +525,8 @@ class Input:
                 'input.Input.get_value: ' +
                 str(value) + ' is not a multiple of ' + str(multipleof))
 
-        # update appropriate set of defaults. In the case of Fnames, strip the extension
+        # update appropriate set of defaults. In the case of Fnames, strip the
+        # extension
         if self._rpars[param]['g_or_l'] == Input.GLOBAL:
             if isinstance(defval, Fname):
                 self._gpars[param] = defval.noext(value)
@@ -593,6 +552,34 @@ class Input:
             return self._pbypos[self.narg:]
         else:
             return None
+
+    def __del__(self):
+        if self._save:
+            warnings.warn(
+                'input.Input.__del__: an input or inputs has/have not been saved; possible programming error', UserWarning)
+
+    def save(self):
+        """Saves parameter values to disk (if NODEFS has not been specified). This
+        should always be called after the last input in order to save the
+        values for next time.
+
+        """
+
+        if not self._nodefs:
+
+            # make the default directory if need be
+            if not os.path.lexists(self._ddir):
+                os.mkdir(self._ddir, 0o755)
+
+            # save local defaults
+            with open(self._lname, 'wb') as flocal:
+                pickle.dump(self._lpars, flocal)
+
+            # save global defaults
+            with open(self._gname, 'wb') as fglobal:
+                pickle.dump(self._gpars, fglobal)
+
+        self._save = False
 
 class Fname(str):
     """Defines a callable parameter type for the :class:`Cline` to allow for some
@@ -710,6 +697,12 @@ class Fname(str):
             return fname[:-len(self.ext)]
         else:
             return fname
+
+    def exists(self):
+        """
+        Checks that the Fname file exists
+        """
+        return os.path.exists(self)
 
     def __getnewargs__(self):
 
