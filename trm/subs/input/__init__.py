@@ -64,7 +64,6 @@ the parameter range if any has been supplied.
 from __future__ import print_function
 
 import os, re, sys, pickle, warnings
-import trm.subs as subs
 
 # next two lines allow tab completion of file names
 import readline
@@ -75,6 +74,16 @@ readline.parse_and_bind("tab: complete")
 #    return results[state]
 
 #readline.set_completer(complete)
+
+def add_extension(fname, ext):
+    """Add extension ext to a file name if it is not already there, and returns
+    the revised name
+
+    """
+    if len(ext) and not fname.endswith(ext):
+        return fname + ext
+    else:
+        return fname
 
 def clist(command):
     """
@@ -99,7 +108,7 @@ class Input:
 
     Here is some example code::
 
-      >> import hipercam.cline as inp
+      >> import input as inp
       >>
       >> # Initialize Input. COMM_ENV is an environment
       >> # variable specifying a directory where the files
@@ -416,7 +425,7 @@ class Input:
         this routine. These are the standard numerical types, 'int', 'long',
         'float', the logical type 'bool' which can be set with any of (case
         insensitively) 'true', 'yes', 'y', '1' (all True), or 'false', 'no',
-        'n', '0' (all False), strings, and subs.Fname objects to
+        'n', '0' (all False), strings, and Fname objects to
         represent filenames with specific extensions, and lists. In the case
         of tuples, it is the default value 'defval' which sets the type.
 
@@ -502,7 +511,7 @@ class Input:
         # at this stage we have the value, now try to convert to the right
         # type according to the type of 'defval'
         try:
-            if isinstance(defval, subs.Fname):
+            if isinstance(defval, Fname):
                 value = defval(value)
             elif isinstance(defval, str):
                 value = str(value)
@@ -550,22 +559,22 @@ class Input:
         # and that it is an OK value
         if lvals != None and value not in lvals:
             raise InputError(
-                'hipercam.cline.Input.get_value: ' +
+                'input.Input.get_value: ' +
                 str(value) + ' is not one of the allowed values = ' + str(lvals))
 
         if multipleof != None and value % multipleof != 0:
             raise InputError(
-                'hipercam.cline.Input.get_value: ' +
+                'input.Input.get_value: ' +
                 str(value) + ' is not a multiple of ' + str(multipleof))
 
         # update appropriate set of defaults. In the case of Fnames, strip the extension
         if self._rpars[param]['g_or_l'] == Input.GLOBAL:
-            if isinstance(defval, subs.Fname):
+            if isinstance(defval, Fname):
                 self._gpars[param] = defval.noext(value)
             else:
                 self._gpars[param] = value
         else:
-            if isinstance(defval, subs.Fname):
+            if isinstance(defval, Fname):
                 self._lpars[param] = defval.noext(value)
             else:
                 self._lpars[param] = value
@@ -584,6 +593,131 @@ class Input:
             return self._pbypos[self.narg:]
         else:
             return None
+
+class Fname(str):
+    """Defines a callable parameter type for the :class:`Cline` to allow for some
+    early checks on file names. This is mainly to prevent a whole series of
+    parameters being input, only to find that the file name input in the first
+    one is incorrect.
+
+    """
+
+    OLD       = 0
+    NEW       = 1
+    NOCLOBBER = 2
+
+    def __new__(cls, root, ext='', ftype=OLD, exist=True):
+        """Constructor distinct from __init__ because str is immutable. In the
+        following text items in capitals such as 'OLD' are static variables so
+        that one should use input.Fname.OLD or equivalent to refer to
+        them.
+
+        Arguments::
+
+          root : (string)
+             root name of file (if it ends with 'ext', an extra 'ext' will
+             not be added)
+
+          ext : (string)
+             extension, e.g. '.dat'
+
+          ftype : (int)
+             OLD = existing or possibly existing file; NEW = new file which
+             will overwrite anything existing; NOCLOBBER is same as NEW but
+             there must not be an existing one of the specified name.
+
+          exist : (bool)
+             If exist=True and ftype=OLD, the file :must: exist. If
+             exist=False, the file may or may not exist already.
+
+        """
+
+        if ftype != Fname.OLD and ftype != Fname.NEW and ftype != Fname.NOCLOBBER:
+            raise ClineError(
+                'input.Fname.__new__: ftype must be either OLD, NEW or NOCLOBBER')
+
+        # store root with no extension
+        if len(ext) and root.endswith(ext):
+            fname = super().__new__(cls, root[:-len(ext)])
+        else:
+            fname = super().__new__(cls, root)
+
+        return fname
+
+    def __init__(self, root, ext='', ftype=OLD, exist=True):
+        """Initialiser. In the following text items in capitals such as 'OLD' are
+        static variables so that one should use input.Fname.OLD or
+        equivalent to refer to them.
+
+        Arguments::
+
+          root : (string)
+             root name of file (if it ends with 'ext', an extra 'ext' will
+             not be added)
+
+          ext : (string)
+             extension, e.g. '.dat'
+
+          ftype : (int)
+             If exist=True and ftype=OLD, the file :must: exist. If exist=False, the file may or may
+             not exist already.
+
+          exist : (bool)
+             If True, the file must exist.
+
+        ext, ftype and exist are stored as identically-named attributes. 'root'
+        is stored as the base string.
+
+        """
+
+        self.ext = ext
+        self.ftype = ftype
+        self.exist = exist
+
+    def __call__(self, fname):
+        """Given a potential file name, this first ensures that it has the correct
+        extension, and then tests for its existence if need be, depending upon
+        the values of `ftype` and `exist` defined at instantiation.
+
+        Arguments::
+
+           fname : (string)
+
+              file name. The extension associated with the :class:`Fname` will
+              be added if necessary.
+
+        Returns the file name to use. Raises a ClineError exception if there
+        are problems.
+
+        """
+
+        # Add extension if not already present.
+        fname = add_extension(fname, self.ext)
+
+        if self.exist and self.ftype == Fname.OLD and not os.path.exists(fname):
+            raise ClineError(
+                'input.Fname.__call__: could not find file = ' + fname)
+
+        if self.ftype == Fname.NOCLOBBER and os.path.exists(fname):
+            raise ClineError(
+                'input.Fname.__call__: file = ' + fname + ' already exists')
+
+        return fname
+
+    def noext(self, fname):
+        """Returns the suggested file name, `fname`, with the extension removed"""
+        if len(self.ext) and fname.endswith(self.ext):
+            return fname[:-len(self.ext)]
+        else:
+            return fname
+
+    def __getnewargs__(self):
+
+        """Enables pickling of :class:`Fname` objects. This returns a tuple of
+        arguments that are passed off to __new__
+
+        """
+        return (self,self.ext,self.ftype,self.exist)
 
 class InputError(Exception):
     """For throwing exceptions from the input module"""
