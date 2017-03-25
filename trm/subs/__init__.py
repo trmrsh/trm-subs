@@ -81,6 +81,8 @@ import sys, os, re, copy
 import math as m
 import numpy as np
 
+from .input import Fname
+
 #sys.path.append('.')
 from ._subs import *
 
@@ -654,58 +656,6 @@ class _odict_iteritem:
         val = self.odct[key]
         self.last += 1
         return (key,val)
-
-class Fname(str):
-    """
-    Class for handling file names with standard extensions. Basically
-    a tiny modification of strings which checks for things like the existence 
-    of the file. Not at all safe of course as it imposes no lock on the files
-    or anything like that. It is designed for use when getting input from the user
-    in the trm.subs.input package when one can define one of these objects to
-    restrict access to files in different ways.
-    """
-
-    OLD       = 0
-    NEW       = 1
-    NOCLOBBER = 2
-    EXIST     = 11
-    NOTEXIST  = 12
-
-    def __new__(self, root, ext, ftype=OLD, check=EXIST, template=True):
-        """
-        root     -- root name of file (if it ends with 'ext', an extra 'ext' will not be added)
-        ext      -- extension, e.g. '.dat'
-        ftype    -- OLD = old file, NEW = new file which will overwrite anything existing, 
-                    NOCLOBBER = new file but there must not be an existing one of the specified name
-        check    -- EXIST implies it will check for the existence of a file. NOTEXIST won't.
-        template -- if True then no checks will be carried out; the object is to act as a template for
-                    for others where ftype and check will be applied. True is the default since usually
-                    this object is used to define a template
-        """
-        if ftype != Fname.OLD and ftype != Fname.NEW and ftype != Fname.NOCLOBBER:
-            raise SubsError('Fname.__init__: ftype must be either OLD, NEW or NOCLOBBER')
-        if check != Fname.EXIST and check != Fname.NOTEXIST:
-            raise SubsError('Fname.__init__: check must be either EXIST or NOTEXIST')
-
-        if root.endswith(ext):
-            fname = str.__new__(self, root)
-        else:
-            fname = str.__new__(self, root + ext)
-        if not template:
-            if check == Fname.EXIST and ftype == Fname.OLD and not os.path.exists(fname):
-                raise SubsError('Could not find file = ' + fname)
-            if ftype == Fname.NOCLOBBER and os.path.exists(fname):
-                raise SubsError('File = ' + fname + ' already exists')
-        return fname
-
-    def __init__(self, root, ext, ftype=OLD, check=EXIST, template=False):
-        self.ext   = ext
-        self.ftype = ftype
-        self.check = check
-
-    def exists(self):
-        """Checks that the file exists"""
-        return os.path.exists(self)
 
 def str2radec(position, crude=False):
     """
