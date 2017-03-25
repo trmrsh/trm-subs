@@ -81,7 +81,7 @@ import sys, os, re, copy
 import math as m
 import numpy as np
 
-sys.path.append('.')
+#sys.path.append('.')
 from ._subs import *
 
 # Constants 
@@ -859,6 +859,7 @@ def observatory(telescope=None):
     OBS = [ \
             ['WHT','La Palma','17 52 53.9','W','28 45 38.3','N',2332.], \
             ['INT','La Palma','17 52 40.', 'W','28 45 43.','N',2336.], \
+            ['LT','La Palma','17 52 45.', 'W','28 45 44.','N',2336.], \
             ['SAAO','Sutherland','20 48 38.5','E','32 22 46.','S', 1798.], \
             ['NTT', 'La Scilla','70 44 00.','W','29 15 00.','S', 2400.], \
             ['VLT', 'Paranal','70 24 9.9','W','24 37 30.3','S',2635.], \
