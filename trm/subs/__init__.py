@@ -76,7 +76,9 @@ Withdrawn functions
 fasper  -- please see the package trm.pgram instead.
 medfilt -- use scipy.signal.medfilt instead
 """
+
 from __future__ import print_function
+
 import sys, os, re, copy
 import math as m
 import numpy as np
@@ -497,14 +499,14 @@ class iStr(str):
     Case insensitive strings class.
     Performs like str except comparisons are case insensitive.
     """
-    
+
     def __init__(self, strMe):
         str.__init__(self, strMe)
         self.__lowerCaseMe = strMe.lower()
-        
+
     def __repr__(self):
         return "iStr(%s)" % str.__repr__(self)
-        
+
     def __eq__(self, other):
         return self.__lowerCaseMe == other.lower()
 
@@ -540,7 +542,7 @@ class iStr(str):
 
     def find(self, other, *args):
         return str.find(self.__lowerCaseMe, other.lower(), *args)
-    
+
     def index(self, other, *args):
         return str.index(self.__lowerCaseMe, other.lower(), *args)
 
@@ -817,7 +819,7 @@ def observatory(telescope=None):
             ['Greenwich', 'London','00 00 0.0','W','51 29 00','N',20.], \
             ['SDSS', 'Apache Point','105 49 13','W','32 46 49','N',2788.], \
             ['SOAR', 'Cerro Pachon','70 44 01.11','W','30 14 16.41','S',2713.], \
-            ['TNT','Doi Inthanon','98 28 00','E','18 34 00','N',2457.], \
+            ['TNT','Doi Inthanon','98 28 56','E','18 34 26','N',2457.], \
             ['ATCA','Narrabri','149 32 56.327','E','30 18 52.048', 'S', 209.3], \
             ['200-in','Palomar','116 51 54','W','33 21 23', 'N', 1713.], \
             ]
