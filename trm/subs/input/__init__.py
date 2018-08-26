@@ -62,7 +62,6 @@ When you get prompting, <tab> allows you to complete filenames. Entering '?' giv
 the parameter range if any has been supplied.
 """
 from __future__ import print_function
-
 import os, re, sys, pickle, warnings
 
 # next two lines allow tab completion of file names
@@ -226,7 +225,7 @@ class Input:
                 self._ddir = os.path.join(home, defdir)
 
             # read local and global default files
-            self._lname = os.path.join(self._ddir, self._cname + '.def')
+            self._lname = os.path.join(self._ddir, os.path.basename(self._cname) + '.def')
             try:
                 with open(self._lname,'rb') as flocal:
                     self._lpars  = pickle.load(flocal)
@@ -247,6 +246,7 @@ class Input:
                 warnings.warn(
                     'input.Input: failed to read global defaults file {0:s}; possible corrupted file.\n'.format(self._gname),UserWarning)
                 self._gpars = {}
+
         else:
             self._ddir = None
             self._lpars = {}
@@ -620,7 +620,7 @@ class Fname(str):
         """
 
         if ftype != Fname.OLD and ftype != Fname.NEW and ftype != Fname.NOCLOBBER:
-            raise ClineError(
+            raise Exception(
                 'input.Fname.__new__: ftype must be either OLD, NEW or NOCLOBBER')
 
         # store root with no extension
@@ -673,7 +673,7 @@ class Fname(str):
               file name. The extension associated with the :class:`Fname` will
               be added if necessary.
 
-        Returns the file name to use. Raises a ClineError exception if there
+        Returns the file name to use. Raises an exception if there
         are problems.
 
         """
@@ -682,11 +682,11 @@ class Fname(str):
         fname = add_extension(fname, self.ext)
 
         if self.exist and self.ftype == Fname.OLD and not os.path.exists(fname):
-            raise ClineError(
+            raise Exception(
                 'input.Fname.__call__: could not find file = ' + fname)
 
         if self.ftype == Fname.NOCLOBBER and os.path.exists(fname):
-            raise ClineError(
+            raise Exception(
                 'input.Fname.__call__: file = ' + fname + ' already exists')
 
         return fname
