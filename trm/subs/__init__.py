@@ -1245,7 +1245,7 @@ def inpoly(poly, x, y):
 
     outside = True
     j = poly.shape[0] - 1
-    for i in xrange(poly.shape[0]):
+    for i in range(poly.shape[0]):
         if ( (poly[i,1] > y) != (poly[j,1] > y) ) and \
                 (x < (poly[j,0]-poly[i,0]) * (y-poly[i,1]) / (poly[j,1]-poly[i,1]) + poly[i,0]):
             outside = not outside
