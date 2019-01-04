@@ -13,6 +13,7 @@ include_dirs = []
 
 # need to direct to where includes and  libraries are
 if 'TRM_SOFTWARE' in os.environ:
+    library_dirs.append(os.path.join(os.environ['TRM_SOFTWARE'], 'lib64'))
     library_dirs.append(os.path.join(os.environ['TRM_SOFTWARE'], 'lib'))
     include_dirs.append(os.path.join(os.environ['TRM_SOFTWARE'], 'include'))
 else:
@@ -22,11 +23,12 @@ include_dirs.append(numpy.get_include())
 
 subs = [Extension("trm.subs._subs",
                  [os.path.join('trm','subs','_subs.pyx')],
-                 define_macros   = [('MAJOR_VERSION', '0'),
-                                    ('MINOR_VERSION', '1')],
-                 include_dirs    = include_dirs,
-                 library_dirs    = library_dirs,
-                 libraries       = ['subs'])]
+                 define_macros = [('MAJOR_VERSION', '0'),
+                                  ('MINOR_VERSION', '1')],
+                 include_dirs = include_dirs,
+                 library_dirs = library_dirs,
+                 runtime_library_dirs = library_dirs,
+                 libraries = ['subs'])]
 
 setup(name='trm.subs',
       version='0.3',
