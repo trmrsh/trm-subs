@@ -1,13 +1,15 @@
 
 'trm.subs' is a Python module that provides a few generally useful utilities 
-that are sometimes required by other modules.
+that are sometimes required by other modules. I only support python3.X now.
 
 Installation:
 
 As well as standard Python, you will need 'numpy', 'scipy' and my C++ subs 
-package. Once these are installed, install with the usual
+package. Once these are installed, install with:
 
-python setup.py install --prefix=your_top_level_installation_directory
+pip install . --user
+
+to install in default location for a single user. Look at 'pip' for more options.
 
 Tom Marsh
 
