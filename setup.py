@@ -2,12 +2,6 @@ from distutils.core import setup, Extension
 from Cython.Build import cythonize
 import os, numpy
 
-try:
-    from sdist import sdist
-    cmdclass = {'sdist': sdist}
-except:
-    cmdclass = {}
-
 library_dirs = []
 include_dirs = []
 
@@ -44,7 +38,6 @@ setup(name='trm.subs',
       long_description="""
 subs provides an interface to various basic routines as well as a set of routines of general utility.
 """,
-      cmdclass = cmdclass
 
-      )
+)
 
