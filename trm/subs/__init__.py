@@ -16,6 +16,7 @@ hms2d              -- produce a decimal hour from an hh:mm:ss.ss time string
 inpoly             -- determines whether a point is inside or outside a polygon
 int2month          -- return 3-letter name of a month from an integer 1 to 12
 linterp            -- linear interpolation of an array onto a different sampling
+minpoly            -- determines whether points are inside or outside a polygon
 m2min              -- computes minimum mass of a companion star given m1 and a mass function.
 month2int          -- return an integer 1 to 12 from name of a month
 mr_wd_eggleton     -- radius of white dwarf according to a formula of Eggleton's
@@ -1228,19 +1229,22 @@ def int2month(month):
     return names[month-1]
 
 def inpoly(poly, x, y):
-    """
-    Determines whether a point (x,y) is inside a polygon defined by the numpy 
-    2D arrays poly which lists the vertices of the polygon such that poly[0,0]
-    is the first x coordinate, poly[0,1] is the first y coordinate, poly[1,0] 
-    is the second x coordinate etc. It returns True if the point is inside the poly.
+    """Determines whether a point (x,y) is inside a polygon defined by
+    the numpy 2D arrays poly which lists the vertices of the polygon
+    such that poly[0,0] is the first x coordinate, poly[0,1] is the
+    first y coordinate, poly[1,0] is the second x coordinate etc. It
+    returns True if the point is inside the poly.
 
     See this web page for lengthy description of the method which I 
     translated from the short piece of C-code listed there:
 
     http://www.ecse.rpi.edu/Homepages/wrf/Research/Short_Notes/pnpoly.html
 
-    I have yet to test whether or Python does the same as C in not bothering with
-    the second test in an 'and' conditional if the first fails.
+    I have yet to test whether or Python does the same as C in not
+    bothering with the second test in an 'and' conditional if the
+    first fails.
+
+    See also: minpoly
     """
 
     outside = True
@@ -1251,6 +1255,35 @@ def inpoly(poly, x, y):
             outside = not outside
         j = i
     return not outside
+
+def minpoly(poly, x, y):
+    """Determines whether points in numpy arrays (x,y) are inside a
+    polygon defined by the numpy 2D arrays poly which lists the
+    vertices of the polygon such that poly[0,0] is the first x
+    coordinate, poly[0,1] is the first y coordinate, poly[1,0] is the
+    second x coordinate etc. It returns True if the point is inside
+    the poly.
+
+    See this web page for lengthy description of the method which I 
+    translated from the short piece of C-code listed there:
+
+    http://www.ecse.rpi.edu/Homepages/wrf/Research/Short_Notes/pnpoly.html
+
+    I have yet to test whether or Python does the same as C in not
+    bothering with the second test in an 'and' conditional if the
+    first fails.
+
+    See also: inpoly
+    """
+
+    outside = np.ones_like(x,dtype=bool)
+    j = poly.shape[0] - 1
+    for i in range(poly.shape[0]):
+        switch =  ((poly[i,1] > y) != (poly[j,1] > y)) & \
+                  (x < (poly[j,0]-poly[i,0]) * (y-poly[i,1]) / (poly[j,1]-poly[i,1]) + poly[i,0])
+        outside[switch] = ~outside[switch]
+        j = i
+    return ~outside
 
 def sigma_reject(data, thresh, onebyone):
     """
