@@ -490,7 +490,7 @@ class Input:
                 value = float(value)
             elif isinstance(defval, list):
                 if isinstance(value, str):
-                    value = map(type(defval[0]), value.split())
+                    value = list(map(type(defval[0]), value.split()))
                 else:
                     value = list(value)
             elif isinstance(defval, tuple):
