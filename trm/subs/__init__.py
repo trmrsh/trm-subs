@@ -1052,13 +1052,13 @@ class Vec3(object):
         temp *= other
         return temp
 
-    def __idiv__(self, other):
+    def __itruediv__(self, other):
         self.x /= other
         self.y /= other
         self.z /= other
         return self
 
-    def __div__(self, other):
+    def __truediv__(self, other):
         temp = copy.copy(self)
         temp /= other
         return temp
