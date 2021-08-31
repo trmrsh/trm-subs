@@ -25,7 +25,7 @@ subs = [Extension("trm.subs._subs",
                  libraries = ['subs'])]
 
 setup(name='trm.subs',
-      version='1.0',
+      version='1.0.1',
       packages = ['trm', 'trm.subs', 'trm.subs.input', 'trm.subs.plot', 'trm.subs.smtp', 'trm.subs.cpp', 'trm.subs.dvect'],
       ext_modules=cythonize(subs),
       scripts=['scripts/hms2decimal.py'],
