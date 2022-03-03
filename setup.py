@@ -1,4 +1,5 @@
-from distutils.core import setup, Extension
+from setuptools import setup
+from setuptools.extension import Extension
 from Cython.Build import cythonize
 import os, numpy
 
@@ -25,7 +26,7 @@ subs = [Extension("trm.subs._subs",
                  libraries = ['subs'])]
 
 setup(name='trm.subs',
-      version='1.0.1',
+      version='1.0.2',
       packages = ['trm', 'trm.subs', 'trm.subs.input', 'trm.subs.plot', 'trm.subs.smtp', 'trm.subs.cpp', 'trm.subs.dvect'],
       ext_modules=cythonize(subs),
       scripts=['scripts/hms2decimal.py'],

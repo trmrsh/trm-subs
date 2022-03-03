@@ -1395,7 +1395,7 @@ def pts2cont(x, y, x1, x2, nx, y1, y2, ny, xb=0., yb=0., frac=None):
     # Define edges, accumulate histogram and transpose it
     xe = np.linspace(x1, x2, nx+1)
     ye = np.linspace(y1, y2, ny+1)
-    (hist,xe,ye) = np.histogram2d(x,y,(xe,ye))
+    hist,xe,ye = np.histogram2d(x,y,(xe,ye))
     hist = hist.transpose()
 
     if xb > 0. or yb > 0.:
